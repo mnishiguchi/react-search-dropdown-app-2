@@ -19,17 +19,15 @@ main {
   max-width: 500px;
 }
 
-.min-options li {
-  text-align: left;
-}
-
-.max-options li {
-  text-align: right;
+.SearchApp .box {
+  margin-bottom: 2rem;
 }
 
 .SearchFilters {
 }
 
-.RentSelect,
+.RentSelect {
+}
+
 .BedBathSelect {
 }

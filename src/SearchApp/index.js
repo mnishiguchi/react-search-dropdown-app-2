@@ -1,13 +1,9 @@
 import React            from 'react'
 import { EventEmitter } from 'fbemitter'
+import FilterContainer  from './FilterContainer'
 import SearchBar        from './SearchBar'
 import RentSelect       from './RentSelect'
 import BedBathSelect    from './BedBathSelect'
-import FilterButton     from './FilterButton'
-
-const FILTER_1 = 'FILTER_1'
-const FILTER_2 = 'FILTER_2'
-const FILTER_3 = 'FILTER_3'
 
 const FORM_INITIAL_STATE = {
     searchTerm    : '',
@@ -18,6 +14,10 @@ const FORM_INITIAL_STATE = {
     expandedFilter: null,
 }
 
+/**
+ * The top-level component of the search widget.
+ * Responsible to collect all the form inputs and submit the query to back end.
+ */
 class SearchApp extends React.Component {
 
     constructor(props) {
@@ -29,45 +29,23 @@ class SearchApp extends React.Component {
         const { expandedFilter } = this.state
 
         return (
-            <section className="SearchApp section">
-                <div className="columns is-mobile box">
+            <div className="SearchApp section">
+                <div className="columns box">
                     <div className="column is-9">
                         <SearchBar emitter={this.emitter} />
                     </div>
 
                     <div className="column is-3">
-                        <a className="button is-primary" style={{ width: '100%' }}>Search</a>
+                        <a className="button is-primary" style={{ width: '100%' }} onClick={e => console.info(this.state)}>
+                          Search
+                        </a>
                     </div>
                 </div>
 
-                <div className="columns is-mobile box">
-                    <div className="column is-4">
-                        <FilterButton emitter={this.emitter} id={FILTER_1} active={expandedFilter === FILTER_1}>
-                            {FILTER_1}
-                        </FilterButton>
-                    </div>
-                    <div className="column is-4">
-                        <FilterButton emitter={this.emitter} id={FILTER_2} active={expandedFilter === FILTER_2}>
-                            {FILTER_2}
-                        </FilterButton>
-                    </div>
-                    <div className="column is-4">
-                        <FilterButton emitter={this.emitter} id={FILTER_3} active={expandedFilter === FILTER_3}>
-                            {FILTER_3}
-                        </FilterButton>
-                    </div>
+                <div>
+                    <FilterContainer emitter={this.emitter} />
                 </div>
-
-                <div className="SearchFilters columns is-mobile box">
-                    <div className="column is-6">
-                        <RentSelect emitter={this.emitter} />
-                    </div>
-
-                    <div className="column is-6">
-                        <BedBathSelect emitter={this.emitter} />
-                    </div>
-                </div>
-            </section>
+            </div>
         )
     }
 
@@ -81,10 +59,6 @@ class SearchApp extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.state.expandedFilter !== nextState.expandedFilter) {
-            return true
-        }
-
         return false // Do not re-render by default
     }
 

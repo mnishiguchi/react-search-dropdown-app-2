@@ -96,7 +96,7 @@ class RentSelect extends React.Component {
         return (
             <div>
                 {this.renderRange()}
-                <ul className="menu-list min-options">
+                <ul className="menu-list min-options" style={{ textAlign: 'left' }}>
                     <li onClick={ e => this._updateMin(null) }><a className={!min         ? 'is-active' : ''}>No Min</a></li>
                     <li onClick={ e => this._updateMin(500)  }><a className={min === 500  ? 'is-active' : ''}>$500</a></li>
                     <li onClick={ e => this._updateMin(700)  }><a className={min === 700  ? 'is-active' : ''}>$700</a></li>
@@ -114,7 +114,7 @@ class RentSelect extends React.Component {
         return (
             <div>
                 {this.renderRange()}
-                <ul className="menu-list max-options">
+                <ul className="menu-list max-options" style={{ textAlign: 'right' }}>
                     <li onClick={ e => this._updateMax(500)  }><a className={max === 500  ? 'is-active' : ''}>$500</a></li>
                     <li onClick={ e => this._updateMax(700)  }><a className={max === 700  ? 'is-active' : ''}>$700</a></li>
                     <li onClick={ e => this._updateMax(900)  }><a className={max === 900  ? 'is-active' : ''}>$900</a></li>
