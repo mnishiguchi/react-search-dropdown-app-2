@@ -5,9 +5,9 @@ import RentSelect       from './RentSelect'
 import BedBathSelect    from './BedBathSelect'
 import FilterButton     from './FilterButton'
 
-const FILTER_1 = 'FILTER_1'
-const FILTER_2 = 'FILTER_2'
-const FILTER_3 = 'FILTER_3'
+const FILTER_1 = 'rent'
+const FILTER_2 = 'beds_baths'
+const FILTER_3 = 'amenities'
 
 class FilterContainer extends React.Component {
     render() {
@@ -18,35 +18,48 @@ class FilterContainer extends React.Component {
         return (
             <div className="FilterContainer">
                 <div className="columns">
-                    <div className="column is-6">
+                    <div className="column is-4">
                         <FilterButton emitter={emitter} id={FILTER_1} active={expandedFilter === FILTER_1}>
                             {this.rentText()}
                         </FilterButton>
                     </div>
-                    <div className="column is-6">
+                    <div className="column is-4">
                         <FilterButton emitter={emitter} id={FILTER_2} active={expandedFilter === FILTER_2}>
                             {this.bedBathText()}
                         </FilterButton>
                     </div>
+                    <div className="column is-4">
+                        <FilterButton emitter={emitter} id={FILTER_3} active={expandedFilter === FILTER_3}>
+                            {this.amenityText()}
+                        </FilterButton>
+                    </div>
                 </div>
 
-                {/*
-                  <div className="SearchFilters columns">
-                      <div className="column is-6">
-                          <RentSelect emitter={emitter} />
-                      </div>
-
-                      <div className="column is-6">
-                          <BedBathSelect emitter={emitter} />
-                      </div>
-                  </div>
-                */}
+                { this.renderFilter() }
             </div>
         )
     }
 
-    // Show beds baths if those values exist
-    // if value exists, set state
+    //---
+    // RENDERING HELPERS
+    //---
+
+    // TODO
+    //
+    renderFilter() {
+        switch (this.props.expandedFilter) {
+            case FILTER_1: return <RentSelect {...this.props} />
+            case FILTER_2: return <div>{FILTER_2}</div>
+            case FILTER_3: return <div>{FILTER_3}</div>
+            default: return null
+        }
+    }
+
+    //---
+    // UTILS
+    //---
+
+    // Return beds baths if those values exist
     bedBathText() {
         const {beds, baths} = this.props
 
@@ -73,7 +86,7 @@ class FilterContainer extends React.Component {
         }
     }
 
-    // Show min max if those values exist.
+    // Return min max if those values exist.
     rentText() {
         const min = parseInt(this.props.min, 10)
         const max = parseInt(this.props.max, 10)
@@ -87,6 +100,10 @@ class FilterContainer extends React.Component {
         }
 
         return 'Rent range'
+    }
+
+    amenityText() {
+      return 'AmenityText'
     }
 }
 

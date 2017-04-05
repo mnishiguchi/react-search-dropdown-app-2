@@ -10,39 +10,13 @@ class RentSelect extends React.Component {
         emitter: T.object.isRequired,
     }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            min     : null,
-            max     : null,
-            mode    : MODE_MIN, // MODE_MIN or MODE_MAX
-            expanded: false
-        }
-    }
-
     render() {
-        const dropdown = this.state.mode === MODE_MAX ? this.renderMaxDropdown() : this.renderMinDropdown()
+
 
         return (
             <div>
-                <a
-                    className="button dropdown-trigger"
-                    style={{ width: '100%' }}
-                    href="#"
-                    title="rents"
-                    onClick={e => this._handleClickTrigger(e) }
-                >
-                      <div style={{ position: 'relative', width: '100%' }}>
-                        {this._filterText()}
-                        <span style={{ position: 'absolute', right: '0' }}>
-                            {this.renderCaret()}
-                        </span>
-                    </div>
-                </a>
-
-                <aside className="menu">
-                    { this.state.expanded ? dropdown : '' }
-                </aside>
+                {this.renderMinDropdown()}
+                {this.renderMaxDropdown()}
             </div>
         )
     }
@@ -86,13 +60,13 @@ class RentSelect extends React.Component {
 
     renderCaret() {
         return (
-            this.state.expanded ? <i className="fa fa-caret-up" aria-hidden="true"></i>
+            this.props.expanded ? <i className="fa fa-caret-up" aria-hidden="true"></i>
                                 : <i className="fa fa-caret-down" aria-hidden="true"></i>
         )
     }
 
     renderMinDropdown() {
-        const { min } = this.state
+        const { min } = this.props
         return (
             <div>
                 {this.renderRange()}
@@ -110,7 +84,7 @@ class RentSelect extends React.Component {
     }
 
     renderMaxDropdown() {
-        const { max } = this.state
+        const { max } = this.props
         return (
             <div>
                 {this.renderRange()}
@@ -128,13 +102,13 @@ class RentSelect extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        this.props.emitter.emit('RentSelect:updated', this.state)
+        this.props.emitter.emit('RentSelect:updated', this.props)
     }
 
     // Show min max if those values exist.
     _filterText() {
-        const min = parseInt(this.state.min, 10)
-        const max = parseInt(this.state.max, 10)
+        const min = parseInt(this.props.min, 10)
+        const max = parseInt(this.props.max, 10)
 
         if (min && max) {
             return `$${min} - ${max}`
@@ -150,13 +124,13 @@ class RentSelect extends React.Component {
     _handleClickTrigger(e) {
         e.preventDefault()
         this.setState({
-            expanded: !this.state.expanded,
+            expanded: !this.props.expanded,
             mode    : MODE_MIN
         })
     }
 
     _handleKeyDown(e) {
-        const { mode } = this.state
+        const { mode } = this.props
         // console.debug(e.key)
         // console.debug(e.target.value)
 
@@ -179,7 +153,7 @@ class RentSelect extends React.Component {
         const parsedValue = parseInt(value, 10)
 
         // Refect invalid input.
-        if (this.state.max && this.state.max <= parsedValue) {
+        if (this.props.max && this.props.max <= parsedValue) {
             alert("Must be min < max")
             return
         }
@@ -195,7 +169,7 @@ class RentSelect extends React.Component {
         const parsedValue = parseInt(value, 10)
 
         // Refect invalid input.
-        if (this.state.min && this.state.min >= parsedValue) {
+        if (this.props.min && this.props.min >= parsedValue) {
             alert("Must be min < max")
             return
         }

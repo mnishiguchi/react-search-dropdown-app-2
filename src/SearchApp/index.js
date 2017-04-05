@@ -34,8 +34,12 @@ class SearchApp extends React.Component {
                     </div>
 
                     <div className="column is-3">
-                        <a className="button is-primary" style={{ width: '100%' }} onClick={e => console.info(this.state)}>
-                          Search
+                        <a
+                            className="button is-primary"
+                            style={{ width: '100%' }}
+                            onClick={e => console.info(this.state)}
+                        >
+                            Search
                         </a>
                     </div>
                 </div>
@@ -60,13 +64,16 @@ class SearchApp extends React.Component {
         console.debug(this.state)
     }
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     return false // Do not re-render by default
-    // }
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.state.expandedFilter !== nextState.expandedFilter) {
+          return true
+        }
+
+        return false // By default, do not re-render for avoiding stack overflow. 
+    }
 
     listenForChildren() {
         this.emitter.addListener('FilterButton:clicked', payload => {
-
             console.debug('FilterButton:clicked:id=' + payload.id)
 
             this.setState((prevState, props) => {
