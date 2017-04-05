@@ -1,0 +1,27 @@
+.App {
+}
+
+.App-header {
+  background-color: #222;
+  height: auto;
+  padding: 1rem;
+  color: white;
+}
+.App-footer {
+  background-color: #222;
+  height: auto;
+  padding: 4rem 1rem;
+  color: white;
+}
+
+main {
+  min-height: 80vh;
+}
+
+.min-options li {
+  text-align: left;
+}
+
+.max-options li {
+  text-align: right;
+}
