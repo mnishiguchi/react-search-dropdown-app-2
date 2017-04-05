@@ -1,19 +1,7 @@
 import React, { PropTypes as T } from 'react'
 import ClassNames                from 'classnames'
 
-class FilterButton extends React.Component {
-
-    static propTypes = {
-        children : T.any,
-        active   : T.any,
-        filterId : T.any,
-    }
-
-    constructor(props) {
-        super(props)
-        this.state = {}
-    }
-
+class FilterControl extends React.Component {
     render() {
         // console.debug(this.props)
 
@@ -47,4 +35,4 @@ class FilterButton extends React.Component {
     }
 }
 
-export default FilterButton
+export default FilterControl

@@ -1,9 +1,5 @@
 import React, { PropTypes as T } from 'react'
 
-// Mode codes
-const MODE_BEDS  = 0
-const MODE_BATHS = 1
-
 // Bed codes
 const STUDIO = 0
 const BEDS_1 = 1
@@ -45,51 +41,31 @@ class BedBathSelect extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            beds    : null,      // null means all
-            baths   : null,      // null means all
-            mode    : MODE_BEDS, // MODE_BEDS or MODE_BATHS
-            expanded: false
+            beds    : props.beds,     // null means all
+            baths   : props.baths,    // null means all
         }
     }
 
     render() {
         return (
-            <div>
-                <a
-                    className="button dropdown-trigger"
-                    style={{ width: '100%' }}
-                    href="#"
-                    title="rents"
-                    onClick={e => this._handleClickTrigger(e)}
-                >
-                    <div style={{ position: 'relative', width: '100%' }}>
-                        {this._filterText()}
-                        <span style={{ position: 'absolute', right: '0' }}>
-                            {this.renderCaret()}
-                        </span>
+            <div className="BedBathSelect">
+                <div className="columns">
+                    <div className="column is-6">
+                        {this.renderBedsSelect()}
                     </div>
-                </a>
-
-                <aside className="menu">
-                    {this.state.expanded ? this.renderBedsDropdown() : ''}
-                    {this.state.expanded ? this.renderBathsDropdown() : ''}
-                </aside>
+                    <div className="column is-6">
+                        {this.renderBathsSelect()}
+                    </div>
+                </div>
             </div>
         )
     }
 
-    renderCaret() {
-        return (this.state.expanded
-            ? <i className="fa fa-caret-up" aria-hidden="true"></i>
-            : <i className="fa fa-caret-down" aria-hidden="true"></i>
-        )
-    }
-
-    renderBedsDropdown() {
+    renderBedsSelect() {
         const {beds} = this.state
 
         return (
-            <div className="BedBathSelect">
+            <div>
                 <h4 className='subtitle' style={{ margin: '1rem 0 0.5rem 0' }}>
                     Beds
                 </h4>
@@ -135,7 +111,7 @@ class BedBathSelect extends React.Component {
         )
     }
 
-    renderBathsDropdown() {
+    renderBathsSelect() {
         const {baths} = this.state
 
         return (
@@ -174,32 +150,19 @@ class BedBathSelect extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        this._notifyNewStateToRoot()
+    }
+
+    _updateBeds(beds) {
+        this.setState({ beds })
+    }
+
+    _updateBaths(baths) {
+        this.setState({ baths })
+    }
+
+    _notifyNewStateToRoot() {
         this.props.emitter.emit('BedBathSelect:updated', this.state)
-
-    }
-
-    // Show beds baths if those values exist
-    // if value exists, set state
-    _filterText() {
-        const {beds, baths} = this.state
-
-        return `${bedText(beds)} x ${bathText(baths)}`
-    }
-
-    _handleClickTrigger(e) {
-        e.preventDefault()
-        this.setState({
-            expanded: !this.state.expanded,
-            mode: MODE_BEDS
-        })
-    }
-
-    _updateBeds(value) {
-        this.setState({expanded: true, mode: MODE_BATHS, beds: value})
-    }
-
-    _updateBaths(value) {
-        this.setState({expanded: false, mode: MODE_BEDS, baths: value})
     }
 }
 

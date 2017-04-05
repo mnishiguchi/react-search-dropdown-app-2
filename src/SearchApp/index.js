@@ -1,73 +1,53 @@
 import React            from 'react'
 import { EventEmitter } from 'fbemitter'
+import FilterContainer  from './FilterContainer'
 import SearchBar        from './SearchBar'
 import RentSelect       from './RentSelect'
 import BedBathSelect    from './BedBathSelect'
-import FilterButton     from './FilterButton'
 
-const FILTER_1 = 'FILTER_1'
-const FILTER_2 = 'FILTER_2'
-const FILTER_3 = 'FILTER_3'
+/**
+ * The top-level component of the search widget.
+ * Responsible to collect all the form inputs and submit the query to back end.
+ */
+class SearchApp extends React.PureComponent {
 
-const FORM_INITIAL_STATE = {
-    searchTerm    : '',
-    min           : null,
-    max           : null,
-    beds          : null,
-    baths         : null,
-    expandedFilter: null,
-}
-
-class SearchApp extends React.Component {
+    static defaultProps = {
+        searchTerm : '',
+        min        : null,
+        max        : null,
+        beds       : null,
+        baths      : null,
+        submit     : false,
+    }
 
     constructor(props) {
         super(props)
-        this.state = FORM_INITIAL_STATE
+        this.state = this.defaultProps
     }
 
     render() {
-        const { expandedFilter } = this.state
-
         return (
-            <section className="SearchApp section">
-                <div className="columns is-mobile box">
+            <div className="SearchApp section">
+                <div className="columns box">
                     <div className="column is-9">
                         <SearchBar emitter={this.emitter} />
                     </div>
 
                     <div className="column is-3">
-                        <a className="button is-primary" style={{ width: '100%' }}>Search</a>
+                        <a
+                            className="button is-primary"
+                            style={{ width: '100%' }}
+                            onClick={e => this._handleSubmit()}
+                        >
+                            Search
+                        </a>
                     </div>
                 </div>
 
-                <div className="columns is-mobile box">
-                    <div className="column is-4">
-                        <FilterButton emitter={this.emitter} id={FILTER_1} active={expandedFilter === FILTER_1}>
-                            {FILTER_1}
-                        </FilterButton>
-                    </div>
-                    <div className="column is-4">
-                        <FilterButton emitter={this.emitter} id={FILTER_2} active={expandedFilter === FILTER_2}>
-                            {FILTER_2}
-                        </FilterButton>
-                    </div>
-                    <div className="column is-4">
-                        <FilterButton emitter={this.emitter} id={FILTER_3} active={expandedFilter === FILTER_3}>
-                            {FILTER_3}
-                        </FilterButton>
-                    </div>
+                <div>
+                    <FilterContainer emitter={this.emitter} {...this.state} />
                 </div>
-
-                <div className="SearchFilters columns is-mobile box">
-                    <div className="column is-6">
-                        <RentSelect emitter={this.emitter} />
-                    </div>
-
-                    <div className="column is-6">
-                        <BedBathSelect emitter={this.emitter} />
-                    </div>
-                </div>
-            </section>
+            </div>
         )
     }
 
@@ -80,67 +60,71 @@ class SearchApp extends React.Component {
         this.emitter.removeAllListeners();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.state.expandedFilter !== nextState.expandedFilter) {
-            return true
-        }
-
-        return false // Do not re-render by default
+    componentDidUpdate() {
+        console.debug(this.state)
     }
 
     listenForChildren() {
         this.emitter.addListener('FilterButton:clicked', payload => {
+            console.debug(`FilterButton:clicked:id=${payload.id}`)
+
             this.setState((prevState, props) => {
                 const expandedFilter = prevState.expandedFilter === payload.id ? null : payload.id
                 return { expandedFilter }
             })
         })
         this.emitter.addListener('SearchBar:updated', payload => {
-            this.update({ type: 'SearchBar:updated', payload })
+            this._update({ type: 'SearchBar:updated', payload })
         })
         this.emitter.addListener('RentSelect:updated', payload => {
-            this.update({ type: 'RentSelect:updated', payload })
+            this._update({ type: 'RentSelect:updated', payload })
         })
         this.emitter.addListener('BedBathSelect:updated', payload => {
-            this.update({ type: 'BedBathSelect:updated', payload })
+            this._update({ type: 'BedBathSelect:updated', payload })
         })
-
-        // TODO: closed event for each filter
     }
 
     // Update state using the reducer.
-    update(action) {
+    _update(action) {
         const nextState = reducer(this.state, action)
         this.setState(nextState)
     }
+
+    // TODO: How to clear form on submit???
+    _handleSubmit() {
+        this.setState({ ...this.defaultProps, submit: true }, () => console.info(this.state))
+    }
 }
 
-function reducer(formState = FORM_INITIAL_STATE, action) {
+function reducer(state, action) {
     const { type, payload } = action
 
     switch (type) {
         case 'SearchBar:updated':
             const { searchTerm } = payload
             return {
-                ...formState,
-                searchTerm
+                ...state,
+                searchTerm,
+                submit: false,
             }
         case 'RentSelect:updated':
             const { min, max } = payload
             return {
-                ...formState,
+                ...state,
                 min,
-                max
+                max,
+                submit: false,
             }
         case 'BedBathSelect:updated':
             const { beds, baths } = payload
             return {
-                ...formState,
+                ...state,
                 beds,
-                baths
+                baths,
+                submit: false,
             }
         default:
-            return formState
+            return state
     }
 }
 
