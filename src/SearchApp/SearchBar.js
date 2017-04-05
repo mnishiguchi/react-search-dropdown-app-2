@@ -3,7 +3,7 @@ import React, { PropTypes as T } from 'react'
 class SearchBar extends React.Component {
 
     static propTypes = {
-        dispatchStateChange: T.func.isRequired,
+        emitter: T.object.isRequired,
     }
 
     constructor(props) {
@@ -20,7 +20,7 @@ class SearchBar extends React.Component {
         const { searchTerm } = this.state
 
         return (
-            <p className="control">
+            <p className="SearchBar control">
                 <input
                     className="input"
                     id="q"
@@ -37,20 +37,11 @@ class SearchBar extends React.Component {
         )
     }
 
-    // ---
-    // LIFECYCLE METHODS
-    // ---
-
     componentDidUpdate(prevProps, prevState) {
-        const { dispatchStateChange } = this.props
-        dispatchStateChange(this.state)
+        this.props.emitter.emit('SearchBar:updated', this.state)
     }
 
-    // ---
-    // PRIVATE METHODS
-    // ---
-
-     handleInputChange(searchTerm) {
+    handleInputChange(searchTerm) {
         this.setState({
             searchTerm
         })

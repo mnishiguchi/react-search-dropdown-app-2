@@ -16,6 +16,7 @@
 
 main {
   min-height: 80vh;
+  max-width: 500px;
 }
 
 .min-options li {
@@ -24,4 +25,11 @@ main {
 
 .max-options li {
   text-align: right;
+}
+
+.SearchFilters {
+}
+
+.RentSelect,
+.BedBathSelect {
 }

@@ -7,7 +7,7 @@ const MODE_MAX = 1
 class RentSelect extends React.Component {
 
     static propTypes = {
-        dispatchStateChange: T.func.isRequired,
+        emitter: T.object.isRequired,
     }
 
     constructor(props) {
@@ -21,8 +21,7 @@ class RentSelect extends React.Component {
     }
 
     render() {
-        const dropdown = this.state.mode === MODE_MAX ? this.renderMaxDropdown()
-                                                      : this.renderMinDropdown()
+        const dropdown = this.state.mode === MODE_MAX ? this.renderMaxDropdown() : this.renderMinDropdown()
 
         return (
             <div>
@@ -51,7 +50,7 @@ class RentSelect extends React.Component {
     renderRange() {
         return (
             <div
-                className="columns range-container"
+                className="RentSelect columns"
                 style={{ padding: '0', margin: '0' }}
                 onKeyDown={e => this._handleKeyDown(e)}
             >
@@ -128,18 +127,9 @@ class RentSelect extends React.Component {
         )
     }
 
-    // ---
-    // LIFECYCLE METHODS
-    // ---
-
     componentDidUpdate(prevProps, prevState) {
-        const { dispatchStateChange } = this.props
-        dispatchStateChange(this.state)
+        this.props.emitter.emit('RentSelect:updated', this.state)
     }
-
-    // ---
-    // PRIVATE METHODS
-    // ---
 
     // Show min max if those values exist.
     _filterText() {

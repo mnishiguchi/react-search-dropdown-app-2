@@ -1,7 +1,7 @@
 import React      from 'react'
 import ReactDOM   from 'react-dom'
 import AppLayout  from './layouts/AppLayout'
-import SearchApp from './components/SearchApp'
+import SearchApp  from './SearchApp'
 
 // Global stylesheets.
 require('bulma/css/bulma.css')

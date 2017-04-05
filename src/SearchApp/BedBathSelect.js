@@ -39,7 +39,7 @@ function bathText(code) {
 class BedBathSelect extends React.Component {
 
     static propTypes = {
-        dispatchStateChange: T.func.isRequired
+        emitter: T.object.isRequired,
     }
 
     constructor(props) {
@@ -89,7 +89,7 @@ class BedBathSelect extends React.Component {
         const {beds} = this.state
 
         return (
-            <div>
+            <div className="BedBathSelect">
                 <h4 className='subtitle' style={{ margin: '1rem 0 0.5rem 0' }}>
                     Beds
                 </h4>
@@ -173,20 +173,10 @@ class BedBathSelect extends React.Component {
         )
     }
 
-    // ---
-    // LIFECYCLE METHODS
-    // ---
-
     componentDidUpdate(prevProps, prevState) {
-        const {dispatchStateChange} = this.props
+        this.props.emitter.emit('BedBathSelect:updated', this.state)
 
-        // Notify the parent component about the new state.
-        dispatchStateChange(this.state)
     }
-
-    // ---
-    // FORM EVENT HANDLERS
-    // ---
 
     // Show beds baths if those values exist
     // if value exists, set state
