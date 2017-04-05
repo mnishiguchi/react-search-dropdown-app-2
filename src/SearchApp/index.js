@@ -26,8 +26,6 @@ class SearchApp extends React.Component {
     }
 
     render() {
-        const { expandedFilter } = this.state
-
         return (
             <div className="SearchApp section">
                 <div className="columns box">
@@ -43,7 +41,7 @@ class SearchApp extends React.Component {
                 </div>
 
                 <div>
-                    <FilterContainer emitter={this.emitter} />
+                    <FilterContainer emitter={this.emitter} {...this.state} />
                 </div>
             </div>
         )
@@ -58,19 +56,27 @@ class SearchApp extends React.Component {
         this.emitter.removeAllListeners();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return false // Do not re-render by default
+    componentDidUpdate() {
+        console.debug(this.state)
     }
+
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     return false // Do not re-render by default
+    // }
 
     listenForChildren() {
         this.emitter.addListener('FilterButton:clicked', payload => {
+
+            console.debug('FilterButton:clicked:id=' + payload.id)
+
             this.setState((prevState, props) => {
                 const expandedFilter = prevState.expandedFilter === payload.id ? null : payload.id
                 return { expandedFilter }
             })
         })
         this.emitter.addListener('SearchBar:updated', payload => {
-            this.update({ type: 'SearchBar:updated', payload })
+            // FIXME: this causes stack overflow.
+            // this.update({ type: 'SearchBar:updated', payload })
         })
         this.emitter.addListener('RentSelect:updated', payload => {
             this.update({ type: 'RentSelect:updated', payload })
