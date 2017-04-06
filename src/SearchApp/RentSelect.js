@@ -4,6 +4,8 @@ class RentSelect extends React.Component {
 
     static propTypes = {
         emitter: T.object.isRequired,
+        min: T.any,
+        max: T.any,
     }
 
     constructor(props) {

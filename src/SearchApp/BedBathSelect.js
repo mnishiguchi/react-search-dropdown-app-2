@@ -36,6 +36,8 @@ class BedBathSelect extends React.Component {
 
     static propTypes = {
         emitter: T.object.isRequired,
+        beds: T.any,
+        baths: T.any,
     }
 
     constructor(props) {

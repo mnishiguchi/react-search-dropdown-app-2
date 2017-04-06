@@ -2,8 +2,6 @@ import React            from 'react'
 import { EventEmitter } from 'fbemitter'
 import FilterContainer  from './FilterContainer'
 import SearchBar        from './SearchBar'
-import RentSelect       from './RentSelect'
-import BedBathSelect    from './BedBathSelect'
 
 /**
  * The top-level component of the search widget.
@@ -17,7 +15,7 @@ class SearchApp extends React.PureComponent {
         max        : null,
         beds       : null,
         baths      : null,
-        submit     : false,
+        reset      : false, // Tell FilterContainer to close the filter pane.
     }
 
     constructor(props) {
@@ -57,7 +55,7 @@ class SearchApp extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.emitter.removeAllListeners();
+        this.emitter.removeAllListeners()
     }
 
     componentDidUpdate() {
@@ -66,8 +64,6 @@ class SearchApp extends React.PureComponent {
 
     listenForChildren() {
         this.emitter.addListener('FilterButton:clicked', payload => {
-            console.debug(`FilterButton:clicked:id=${payload.id}`)
-
             this.setState((prevState, props) => {
                 const expandedFilter = prevState.expandedFilter === payload.id ? null : payload.id
                 return { expandedFilter }
@@ -90,9 +86,8 @@ class SearchApp extends React.PureComponent {
         this.setState(nextState)
     }
 
-    // TODO: How to clear form on submit???
     _handleSubmit() {
-        this.setState({ ...this.defaultProps, submit: true }, () => console.info(this.state))
+        this.setState({ ...this.defaultProps, reset: true }, () => console.info(this.state))
     }
 }
 
@@ -105,7 +100,7 @@ function reducer(state, action) {
             return {
                 ...state,
                 searchTerm,
-                submit: false,
+                reset: false,
             }
         case 'RentSelect:updated':
             const { min, max } = payload
@@ -113,7 +108,7 @@ function reducer(state, action) {
                 ...state,
                 min,
                 max,
-                submit: false,
+                reset: false,
             }
         case 'BedBathSelect:updated':
             const { beds, baths } = payload
@@ -121,7 +116,7 @@ function reducer(state, action) {
                 ...state,
                 beds,
                 baths,
-                submit: false,
+                reset: false,
             }
         default:
             return state

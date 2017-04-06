@@ -15,6 +15,22 @@ npm start
 
 ---
 
+## Components
+
+```
+SearchApp
+├── SearchBar
+└── FilterContainer
+    ├── FilterButton
+    ├── FilterButton
+    ├── RentSelect
+    └── BedBathSelect
+```
+
+![](components.jpg)
+
+---
+
 ## Libraries and References
 - [facebookincubator/create-react-app](https://github.com/facebookincubator/create-react-app)
 - [Bulma.io](http://bulma.io/documentation/overview/start/) for overall styles

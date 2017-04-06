@@ -1,11 +1,8 @@
-import React            from 'react'
-import { EventEmitter } from 'fbemitter'
+import React, { PropTypes as T } from 'react'
 
-import SearchBar        from './SearchBar'
 import RentSelect       from './RentSelect'
 import BedBathSelect    from './BedBathSelect'
 import FilterButton     from './FilterButton'
-import StaticContainer  from './StaticContainer'
 
 const FILTER_1 = 'rent'
 const FILTER_2 = 'beds_baths'
@@ -13,22 +10,32 @@ const FILTER_3 = 'amenities'
 
 class FilterContainer extends React.Component {
 
+    static propTypes = {
+        emitter: T.object.isRequired,
+        reset: T.any,
+    }
+
     constructor(props) {
         super(props)
         this.state = {
-            expandedFilter: props.initialize
+            expandedFilter: null,
         }
     }
 
     render() {
-        const { expandedFilter } = this.state
-
         return (
             <div className="FilterContainer">
                 { this.renderButtons() }
                 { this.renderFilter() }
             </div>
         )
+    }
+
+    componentWillReceiveProps(nextProps) {
+        // Close the filter pane when the reset prop is true.
+        if (nextProps.reset) {
+            this.setState({ expandedFilter: null })
+        }
     }
 
     //---
